@@ -1,11 +1,20 @@
-apply plugin: 'java'
-apply plugin: 'application'
-
-mainClassName = "com.twilio.callforwarding.Server"
-
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.postgresql:postgresql:9.4-1206-jdbc42'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'jetty'
+apply plugin: 'org.flywaydb.flyway'
 
 dependencies {
     compile group: 'com.sparkjava', name: 'spark-core', version:'2.5.5'
@@ -30,9 +39,15 @@ jar.baseName = 'server'
 
 jar {
   manifest {
-    attributes 'Main-Class': 'com.twilio.survey.Server'
+    attributes 'Main-Class': 'com.twilio.callforwarding.Server'
   }
   from {
     configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
   }
+}
+
+flyway {
+    user = "$System.env.DB_USERNAME"
+    password = "$System.env.DB_PASSWORD"
+    url = "$System.env.JDBC_URL"
 }

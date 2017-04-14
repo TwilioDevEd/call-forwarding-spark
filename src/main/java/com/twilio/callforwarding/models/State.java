@@ -18,6 +18,8 @@ public class State {
     @OneToMany(mappedBy="state")
     private List<Senator> senators;
 
+
+
     public Long getId() {
         return id;
     }
@@ -47,6 +49,10 @@ public class State {
         this.id = id;
         this.name = name;
         this.senators = senators;
+    }
+
+    public State(String name) {
+        this.name = name;
     }
 
     public State() {

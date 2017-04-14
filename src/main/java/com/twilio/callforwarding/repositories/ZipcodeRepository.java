@@ -6,4 +6,6 @@ public class ZipcodeRepository extends Repository<Zipcode> {
     public ZipcodeRepository() {
         super(Zipcode.class);
     }
+
+
 }

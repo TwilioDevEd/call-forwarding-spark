@@ -24,6 +24,12 @@ public class Senator {
     public Senator() {
     }
 
+    public Senator(String name, String phone, State state) {
+        this.name = name;
+        this.phone = phone;
+        this.state = state;
+    }
+
     public Senator(Long id, String name, String phone, State state) {
         this.id = id;
         this.name = name;

@@ -5,6 +5,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -19,7 +20,7 @@ public abstract class Repository<T> {
 
         Map<String, String> properties = getProperties();
         em = Persistence
-                .createEntityManagerFactory("airtng", properties)
+                .createEntityManagerFactory("callforwarding", properties)
                 .createEntityManager();
     }
 
@@ -34,6 +35,19 @@ public abstract class Repository<T> {
                 String.format("SELECT e FROM %s e", entityType.getSimpleName()));
 
         return query.getResultList();
+    }
+
+    /**
+     * Returns the number of instances of the type.
+     *
+     * @return entities count
+     */
+    @SuppressWarnings("unchecked")
+    public long count() {
+        Query query = em.createQuery(
+                String.format("SELECT count(e) FROM %s e", entityType.getSimpleName()));
+
+        return (long) query.getSingleResult();
     }
 
     /**
@@ -63,6 +77,21 @@ public abstract class Repository<T> {
         getTransaction().commit();
 
         return entity;
+    }
+
+    /**
+     * Saves a list of entities. Does not return the saved entities
+     *
+     * @param batch  The list of entities
+     *
+     * @return the saved entity
+     */
+    public void bulkCreate(List<T> batch) {
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        batch.stream().forEach(e -> em.persist(e));
+        em.flush();
+        transaction.commit();
     }
 
     /**
@@ -114,4 +143,6 @@ public abstract class Repository<T> {
 
         return config;
     }
+
+
 }

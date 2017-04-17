@@ -58,4 +58,9 @@ public class State {
     public State() {
 
     }
+
+    public State withSenators(List<Senator> senators) {
+        this.senators = senators;
+        return this;
+    }
 }

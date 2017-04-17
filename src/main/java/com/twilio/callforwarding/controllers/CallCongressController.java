@@ -19,6 +19,12 @@ public class CallCongressController {
     private StateRepository stateRepository;
     private ZipcodeRepository zipcodeRepository;
 
+    public CallCongressController(SenatorRepository senatorRepository, StateRepository stateRepository, ZipcodeRepository zipcodeRepository) {
+        this.senatorRepository = senatorRepository;
+        this.stateRepository = stateRepository;
+        this.zipcodeRepository = zipcodeRepository;
+    }
+
     public CallCongressController() {
         this.senatorRepository = new SenatorRepository();
         this.stateRepository = new StateRepository();
@@ -73,7 +79,7 @@ public class CallCongressController {
     // Look up state from given zipcode.
     // Once state is found, redirect to call_senators for forwarding.
     public Route stateLookupRoute = (request, response) -> {
-        String zipcode = request.params("Digits");
+        String zipcode = request.queryParams("Digits");
 
         // NB: We don't do any error handling for a missing/erroneous zip code
         // in this sample application. You, gentle reader, should to handle that
@@ -112,9 +118,9 @@ public class CallCongressController {
         VoiceResponse.Builder builder = new VoiceResponse.Builder();
         Senator firstCall = senators.get(0);
         Senator secondCall = senators.get(1);
-        String sayMessage = String.format("Connecting you to {}. " +
+        String sayMessage = String.format("Connecting you to %s. " +
                         "After the senator's office ends the call, you will " +
-                        "be re-directed to {}.",
+                        "be re-directed to %s.",
                 firstCall.getName(),
                 secondCall.getName());
         builder.say(new Say.Builder(sayMessage).build());
@@ -132,7 +138,7 @@ public class CallCongressController {
         Senator senator = senatorRepository.find(Long.valueOf(request.params("senatorId")));
         VoiceResponse.Builder builder = new VoiceResponse.Builder();
 
-        String sayMessage = String.format("Connecting you to {}.", senator.getName());
+        String sayMessage = String.format("Connecting you to %s.", senator.getName());
         builder.say(new Say.Builder(sayMessage).build());
 
         builder.dial(new Dial.Builder()
@@ -151,6 +157,7 @@ public class CallCongressController {
                 "Your voice makes a difference. Goodbye.").build());
         builder.hangup(new Hangup());
 
+        response.type(APPLICATION_XML);
         return builder.build().toXml();
     };
 }

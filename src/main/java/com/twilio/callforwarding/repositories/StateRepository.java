@@ -8,7 +8,7 @@ public class StateRepository extends Repository<State> {
     }
 
     public State findByStateName(String name) {
-        return (State) em.createQuery("select s from State s where name = :name")
+        return (State) em.createQuery("select s from State s where s.name = :name")
                 .setParameter("name", name)
                 .getSingleResult();
     }

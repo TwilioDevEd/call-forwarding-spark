@@ -7,6 +7,7 @@ import spark.servlet.SparkApplication;
 
 import static spark.Spark.afterAfter;
 import static spark.Spark.post;
+import static spark.Spark.get;
 
 public class App implements SparkApplication {
 
@@ -27,12 +28,15 @@ public class App implements SparkApplication {
         post("/callcongress/welcome", callCongressController.welcomeRoute);
 
         post("/callcongress/collect-zip", callCongressController.collectZipRoute);
+        get("/callcongress/collect-zip", callCongressController.collectZipRoute);
 
         post("/callcongress/state-lookup", callCongressController.stateLookupRoute);
 
         post("/callcongress/set-state", callCongressController.setStateRoute);
 
         post("/callcongress/call-senators/:state",
+                callCongressController.callSenatorsRoute);
+        get("/callcongress/call-senators/:state",
                 callCongressController.callSenatorsRoute);
 
         post("/callcongress/call-second-senator/:senatorId",

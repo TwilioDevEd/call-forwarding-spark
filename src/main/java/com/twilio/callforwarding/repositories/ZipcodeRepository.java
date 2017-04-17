@@ -8,4 +8,9 @@ public class ZipcodeRepository extends Repository<Zipcode> {
     }
 
 
+    public Zipcode getFirstResultFilteredByZipcode(String zipcode) {
+        return (Zipcode) em.createQuery("select z from Zipcode z where z.zipcode = :zipcode")
+                .setParameter("zipcode", zipcode)
+                .getSingleResult();
+    }
 }

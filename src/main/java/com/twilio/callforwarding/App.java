@@ -3,6 +3,7 @@ package com.twilio.callforwarding;
 import com.twilio.callforwarding.controllers.CallCongressController;
 import com.twilio.callforwarding.db.DbSeedHelper;
 import com.twilio.callforwarding.logging.LoggingFilter;
+import spark.Spark;
 import spark.servlet.SparkApplication;
 
 import static spark.Spark.afterAfter;
@@ -22,6 +23,8 @@ public class App implements SparkApplication {
 
         DbSeedHelper dbSeedHelper = new DbSeedHelper();
         dbSeedHelper.seedDb();
+
+        Spark.staticFileLocation("/public");
 
         afterAfter(new LoggingFilter());
 

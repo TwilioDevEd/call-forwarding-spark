@@ -5,8 +5,13 @@ import com.twilio.callforwarding.models.Zipcode;
 import com.twilio.callforwarding.repositories.SenatorRepository;
 import com.twilio.callforwarding.repositories.StateRepository;
 import com.twilio.callforwarding.repositories.ZipcodeRepository;
-import com.twilio.twiml.*;
-import com.twilio.twiml.Number;
+import com.twilio.http.HttpMethod;
+import com.twilio.twiml.VoiceResponse;
+import com.twilio.twiml.voice.Dial;
+import com.twilio.twiml.voice.Gather;
+import com.twilio.twiml.voice.Hangup;
+import com.twilio.twiml.voice.Number;
+import com.twilio.twiml.voice.Say;
 import spark.Route;
 import spark.utils.StringUtils;
 
@@ -45,7 +50,7 @@ public class CallCongressController {
             builder.gather(new Gather.Builder()
                     .numDigits(1)
                     .action("/callcongress/set-state")
-                    .method(Method.POST)
+                    .method(HttpMethod.POST)
                     .build());
         } else {
             builder.say(new Say.Builder(
@@ -54,7 +59,7 @@ public class CallCongressController {
             builder.gather(new Gather.Builder()
                     .numDigits(5)
                     .action("/callcongress/state-lookup")
-                    .method(Method.POST)
+                    .method(HttpMethod.POST)
                     .build());
         }
         response.type(APPLICATION_XML);
@@ -69,7 +74,7 @@ public class CallCongressController {
         builder.gather(new Gather.Builder()
                 .numDigits(5)
                 .action("/callcongress/state-lookup")
-                .method(Method.POST)
+                .method(HttpMethod.POST)
                 .build());
 
         response.type(APPLICATION_XML);
@@ -155,7 +160,7 @@ public class CallCongressController {
         VoiceResponse.Builder builder = new VoiceResponse.Builder();
         builder.say(new Say.Builder("Thank you for using Call Congress! " +
                 "Your voice makes a difference. Goodbye.").build());
-        builder.hangup(new Hangup());
+        builder.hangup(new Hangup.Builder().build());
 
         response.type(APPLICATION_XML);
         return builder.build().toXml();
